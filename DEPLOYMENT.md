@@ -8,7 +8,13 @@
 
 ### Langkah-langkah Deployment
 
-1. **Persiapan Environment**
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/zainalsalamun/laravel-absensi-backend-cmp.git
+   cd laravel-absensi-backend-cmp
+   ```
+
+2. **Persiapan Environment**
    ```bash
    # Copy file environment contoh
    cp .env.docker.example .env
@@ -17,7 +23,7 @@
    nano .env
    ```
 
-2. **Atur Konfigurasi Nginx dan SSL**
+3. **Atur Konfigurasi Nginx dan SSL**
    Untuk SSL Letsencrypt, kamu bisa menambahkan service certbot ke docker-compose.yml atau menggunakan certbot standalone:
    ```bash
    # Install certbot
@@ -31,7 +37,7 @@
    sudo cp /etc/letsencrypt/live/your-domain.com/privkey.pem docker/nginx/ssl/
    ```
 
-3. **Jalankan Aplikasi**
+4. **Jalankan Aplikasi**
    ```bash
    # Build dan jalankan container
    docker-compose up -d --build
@@ -48,7 +54,7 @@
    docker-compose exec app php artisan view:cache
    ```
 
-4. **Verifikasi Deployment**
+5. **Verifikasi Deployment**
    Buka browser dan akses `https://your-domain.com`
 
 ### Manajemen Service
