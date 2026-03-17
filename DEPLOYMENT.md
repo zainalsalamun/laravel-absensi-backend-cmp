@@ -335,3 +335,6 @@ docker-compose ps
    ```
 5. **Backup database secara rutin**
 6. **Monitor log aplikasi** secara berkala
+
+---
+*Dokumentasi ini diperbarui terakhir pada Mar 2026.*

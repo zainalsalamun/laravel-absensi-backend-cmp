@@ -18,7 +18,13 @@ Sistem Manajemen Absensi Karyawan berbasis Laravel (Backend/Dashboard) dan Flutt
     -   Validasi radius jarak karyawan dengan lokasi kantor sebelum absen.
     -   Pendeteksi Mock Location (GPS Palsu) di sisi aplikasi mobile.
     -   Toleransi GPS (50 meter) untuk akurasi yang lebih baik.
--   **Export Report**:支持 (Support) ekspor data absensi ke format CSV untuk keperluan penggajian.
+-   **Export Report**: Mendukung ekspor data absensi ke format CSV untuk keperluan penggajian.
+-   **Manajemen Izin Kerja**: Pengajuan izin cuti/izin kerja, persetujuan oleh admin, dan notifikasi via email/push.
+-   **Manajemen Reimbursement**: Pengajuan biaya reimbursement, upload bukti pembayaran, dan proses persetujuan.
+-   **QR Code Absensi**: Alternatif metode absensi menggunakan QR code untuk lokasi yang sulit dijangkau geofencing.
+-   **Manajemen Shift**: Pengaturan jadwal shift kerja yang dapat diassign ke karyawan.
+-   **Notifikasi Push**: Notifikasi realtime via Firebase Cloud Messaging (FCM) untuk persetujuan izin, absen, dan reimbursement.
+-   **Manajemen Catatan (Notes)**: Tambah catatan untuk absensi atau izin karyawan.
 
 ## Teknologi yang Digunakan
 
@@ -33,11 +39,13 @@ Sistem Manajemen Absensi Karyawan berbasis Laravel (Backend/Dashboard) dan Flutt
 -   **State Management**: BLoC / Cubit
 -   **Maps/Location**: Geolocator & Google Maps API
 
-## Langkah Instalasi (Backend)
+## Langkah Instalasi & Deployment
 
+### Untuk Pengembangan Lokal (Local Development)
 1.  Clone repository:
     ```bash
-    git clone [repository-url]
+    git clone https://github.com/zainalsalamun/laravel-absensi-backend-cmp.git
+    cd laravel-absensi-backend-cmp
     ```
 2.  Install dependencies:
     ```bash
@@ -53,13 +61,17 @@ Sistem Manajemen Absensi Karyawan berbasis Laravel (Backend/Dashboard) dan Flutt
     ```bash
     php artisan migrate --seed
     ```
-5.  Jalankan server:
+5.  Jalankan server lokal:
     ```bash
     php artisan serve
     ```
+    Akses aplikasi di `http://localhost:8000`
+
+### Untuk Deployment Produksi
+Untuk panduan lengkap deployment produksi (dengan Docker, Nginx, MySQL/PostgreSQL), silakan lihat file **DEPLOYMENT.md** yang terdapat di root repository.
 
 ## Tim Pengembangan
 -   **FIC (Flutter Intensive Club)** - [Your Name/Org]
 
 ---
-*Dokumentasi ini diperbarui terakhir pada Feb 2026.*
+*Dokumentasi ini diperbarui terakhir pada Mar 2026.*
