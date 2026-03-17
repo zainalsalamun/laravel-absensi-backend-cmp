@@ -68,7 +68,7 @@ docker-compose ps
 
 ---
 
-## Pilihan 2: Deployment Tanpa Docker (Standard Laravel Deployment)
+## Pilihan 2: Deployment Tanpa Docker dengan PostgreSQL
 ### Persyaratan
 - VPS dengan PHP 8.2+ terinstall
 - Web Server (Nginx/Apache)
@@ -120,8 +120,142 @@ docker-compose ps
    # Copy file environment
    cp .env.example .env
    
-   # Edit file .env
+   # Edit file .env untuk PostgreSQL
    nano .env
+   # Ubah konfigurasi database:
+   # DB_CONNECTION=pgsql
+   # DB_HOST=127.0.0.1
+   # DB_PORT=5432
+   # DB_DATABASE=absensi
+   # DB_USERNAME=absensi_user
+   # DB_PASSWORD=password_aman_anda
+   ```
+
+4. **Konfigurasi Nginx**
+   Buat file konfigurasi Nginx di `/etc/nginx/sites-available/absensi.conf`:
+   ```nginx
+   server {
+       listen 80;
+       server_name your-domain.com;
+       root /var/www/absensi/public;
+
+       add_header X-Frame-Options "SAMEORIGIN";
+       add_header X-XSS-Protection "1; mode=block";
+       add_header X-Content-Type-Options "nosniff";
+
+       index index.php;
+
+       charset utf-8;
+
+       location / {
+           try_files $uri $uri/ /index.php?$query_string;
+       }
+
+       location = /favicon.ico { access_log off; log_not_found off; }
+       location = /robots.txt  { access_log off; log_not_found off; }
+
+       error_page 404 /index.php;
+
+       location ~ \.php$ {
+           fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+           fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+           include fastcgi_params;
+       }
+
+       location ~ /\.(?!well-known).* {
+           deny all;
+       }
+   }
+   ```
+
+   Aktifkan konfigurasi:
+   ```bash
+   sudo ln -s /etc/nginx/sites-available/absensi.conf /etc/nginx/sites-enabled/
+   sudo nginx -t
+   sudo systemctl restart nginx
+   ```
+
+5. **Jalankan Aplikasi**
+   ```bash
+   # Generate application key
+   php artisan key:generate
+   
+   # Jalankan migrasi dan seeder
+   php artisan migrate --seed
+   
+   # Set permission direktori
+   sudo chown -R www-data:www-data storage bootstrap/cache
+   sudo chmod -R 775 storage bootstrap/cache
+   
+   # Install dan jalankan queue worker
+   sudo systemctl enable --now redis-server
+   php artisan queue:work --daemon
+   ```
+
+---
+
+## Pilihan 3: Deployment Tanpa Docker dengan MySQL
+### Persyaratan
+- VPS dengan PHP 8.2+ terinstall
+- Web Server (Nginx/Apache)
+- Database MySQL 8.0+
+- Redis (opsional untuk queue dan cache)
+
+### Langkah-langkah Deployment
+
+1. **Persiapan Server**
+   ```bash
+   # Update package server
+   sudo apt update && sudo apt upgrade -y
+   
+   # Install dependencies PHP
+   sudo apt install php8.2-fpm php8.2-mysql php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-gd php8.2-redis php8.2-zip php8.2-curl
+   
+   # Install Web Server Nginx
+   sudo apt install nginx
+   
+   # Install Database MySQL
+   sudo apt install mysql-server
+   
+   # Install Redis
+   sudo apt install redis-server
+   ```
+
+2. **Konfigurasi Database**
+   ```bash
+   # Masuk ke MySQL
+   sudo mysql -u root
+   
+   # Buat database dan user
+   CREATE DATABASE absensi;
+   CREATE USER 'absensi_user'@'localhost' IDENTIFIED BY 'password_aman_anda';
+   GRANT ALL PRIVILEGES ON absensi.* TO 'absensi_user'@'localhost';
+   FLUSH PRIVILEGES;
+   EXIT;
+   ```
+
+3. **Deploy Kode Aplikasi**
+   ```bash
+   # Clone repository di direktori web
+   cd /var/www
+   git clone https://github.com/zainalsalamun/laravel-absensi-backend-cmp.git absensi
+   cd absensi
+   
+   # Install dependencies Composer
+   composer install --optimize-autoloader --no-dev
+   
+   # Copy file environment
+   cp .env.example .env
+   
+   # Edit file .env untuk MySQL
+   nano .env
+   # Ubah konfigurasi database:
+   # DB_CONNECTION=mysql
+   # DB_HOST=127.0.0.1
+   # DB_PORT=3306
+   # DB_DATABASE=absensi
+   # DB_USERNAME=absensi_user
+   # DB_PASSWORD=password_aman_anda
    ```
 
 4. **Konfigurasi Nginx**
