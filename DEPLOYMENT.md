@@ -72,7 +72,7 @@ docker-compose ps
 ### Persyaratan
 - VPS dengan PHP 8.2+ terinstall
 - Web Server (Nginx/Apache)
-- Database MySQL 8.0+
+- Database PostgreSQL 15+
 - Redis (opsional untuk queue dan cache)
 
 ### Langkah-langkah Deployment
@@ -83,13 +83,13 @@ docker-compose ps
    sudo apt update && sudo apt upgrade -y
    
    # Install dependencies PHP
-   sudo apt install php8.2-fpm php8.2-mysql php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-gd php8.2-redis php8.2-zip php8.2-curl
+   sudo apt install php8.2-fpm php8.2-pgsql php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-gd php8.2-redis php8.2-zip php8.2-curl
    
    # Install Web Server Nginx
    sudo apt install nginx
    
-   # Install Database MySQL
-   sudo apt install mysql-server
+   # Install Database PostgreSQL
+   sudo apt install postgresql postgresql-contrib
    
    # Install Redis
    sudo apt install redis-server
@@ -97,15 +97,14 @@ docker-compose ps
 
 2. **Konfigurasi Database**
    ```bash
-   # Masuk ke MySQL
-   sudo mysql -u root
+   # Masuk ke PostgreSQL
+   sudo -u postgres psql
    
    # Buat database dan user
    CREATE DATABASE absensi;
-   CREATE USER 'absensi_user'@'localhost' IDENTIFIED BY 'password_aman_anda';
-   GRANT ALL PRIVILEGES ON absensi.* TO 'absensi_user'@'localhost';
-   FLUSH PRIVILEGES;
-   EXIT;
+   CREATE USER absensi_user WITH PASSWORD 'password_aman_anda';
+   GRANT ALL PRIVILEGES ON DATABASE absensi TO absensi_user;
+   \q
    ```
 
 3. **Deploy Kode Aplikasi**
