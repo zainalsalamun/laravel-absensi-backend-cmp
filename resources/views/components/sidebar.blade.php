@@ -38,13 +38,6 @@
             </li>
 
             <li class="nav-item">
-                <a href="{{ route('reimbursements.index') }}" class="nav-link">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <span>Reimbursement</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
                 <a href="{{ route('shifts.index') }}" class="nav-link">
                     <i class="fas fa-clock"></i>
                     <span>Shift</span>
@@ -55,20 +48,6 @@
                 <a href="{{ route('overtimes.index') }}" class="nav-link">
                     <i class="fas fa-business-time"></i>
                     <span>Overtime</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="{{ route('qr_absens.index') }}" class="nav-link">
-                    <i class="fas fa-qrcode"></i>
-                    <span>QR Absen</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="{{ route('verifikasi.index') }}" class="nav-link">
-                    <i class="fas fa-user-check"></i>
-                    <span>Verifikasi Pensiun</span>
                 </a>
             </li>
 

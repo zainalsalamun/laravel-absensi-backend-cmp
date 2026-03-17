@@ -97,12 +97,6 @@
                                                     None</option>
                                             </select> --}}
                                             <select name="attendance_type" class="form-control" style="height: 40px;">
-                                                <option value="Face"
-                                                    {{ $company->attendance_type == 'Face' ? 'selected' : '' }}>
-                                                    Face</option>
-                                                <option value="QR"
-                                                    {{ $company->attendance_type == 'QR' ? 'selected' : '' }}>
-                                                    QR</option>
                                                 <option value="None"
                                                     {{ $company->attendance_type == 'None' ? 'selected' : '' }}>
                                                     None</option>
