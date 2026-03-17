@@ -14,7 +14,9 @@ RUN apk add --no-cache \
     libxml2-dev \
     zip \
     unzip \
-    bash
+    bash \
+    postgresql-dev \
+    libpq
 
 # Configure and install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp
