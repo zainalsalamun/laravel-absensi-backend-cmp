@@ -5,14 +5,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\QrAbsenController;
 use App\Models\User;
 use App\Models\Company;
 use App\Models\Attendance;
 use App\Models\Permission;
-use App\Models\QrAbsen;
 use App\Models\Note;
-use App\Http\Controllers\VerifikasiPensiunController;
+use App\Models\Shift;
 use App\Http\Controllers\OvertimeController;
 
 Route::get('/', function () {
@@ -25,7 +23,7 @@ Route::middleware(['auth'])->group(function () {
 Route::get('home', function () {
     $currentDate = date('Y-m-d');
     $user = auth()->user();
-    
+
     if (in_array($user->role, ['admin', 'super admin', 'hrd', 'supervisor'])) {
         // Calculate late attendees
         $late_today = Attendance::where('date', $currentDate)
@@ -80,12 +78,9 @@ Route::get('home', function () {
     Route::get('/attendances/export-csv', [AttendanceController::class, 'exportCsv'])->name('attendances.export-csv');
     Route::resource('attendances', AttendanceController::class);
     Route::resource('permissions', PermissionController::class);
-    Route::resource('qr_absens', QrAbsenController::class);
-    Route::get('/verifikasi/export-csv', [VerifikasiPensiunController::class, 'exportCsv'])->name('verifikasi.export-csv');
-    Route::resource('verifikasi', VerifikasiPensiunController::class);
-    Route::resource('reimbursements', App\Http\Controllers\ReimbursementController::class);
+
     Route::resource('shifts', App\Http\Controllers\ShiftController::class);
     Route::resource('overtimes', OvertimeController::class);
 
-    Route::get('/qr-absens/{id}/download', [QrAbsenController::class, 'downloadPDF'])->name('qr_absens.download');
+
 });
