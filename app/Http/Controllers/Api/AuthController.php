@@ -42,22 +42,20 @@ class AuthController extends Controller
         return response(['message' => 'Logged out'], 200);
     }
 
-    //update image profile & face_embedding
+    //update image profile
     public function updateProfile(Request $request)
     {
         $request->validate([
-            // 'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'face_embedding' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $user = $request->user();
-        // $image = $request->file('image');
-        $face_embedding = $request->face_embedding;
+        $image = $request->file('image');
+        $image_name = time() . '.' . $image->getClientOriginalExtension();
+        $filePath = $image->storeAs('images/users', $image_name, 'public');
 
-        // //save image
-        // $image->storeAs('public/images', $image->hashName());
-        // $user->image_url = $image->hashName();
-        $user->face_embedding = $face_embedding;
+        $user->image_url = $filePath;
+        $user->face_embedding = null; // Clear old face embedding data since we're not using it anymore
         $user->save();
 
         return response([

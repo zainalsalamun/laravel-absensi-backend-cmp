@@ -16,6 +16,8 @@ class Attendance extends Model
         'time_out',
         'latlon_in',
         'latlon_out',
+        'photo_in',
+        'photo_out',
     ];
 
     public function user()

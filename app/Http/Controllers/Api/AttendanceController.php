@@ -15,7 +15,14 @@ class AttendanceController extends Controller
         $request->validate([
             'latitude' => 'required',
             'longitude' => 'required',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+
+        // Handle photo upload
+        $photoPath = null;
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('assets/attendances', 'public');
+        }
 
         //save new attendance
         $attendance = new Attendance;
@@ -23,6 +30,7 @@ class AttendanceController extends Controller
         $attendance->date = date('Y-m-d');
         $attendance->time_in = date('H:i:s');
         $attendance->latlon_in = $request->latitude . ',' . $request->longitude;
+        $attendance->photo_in = $photoPath;
         $attendance->save();
 
         return response([
@@ -38,7 +46,14 @@ class AttendanceController extends Controller
         $request->validate([
             'latitude' => 'required',
             'longitude' => 'required',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+
+        // Handle photo upload
+        $photoPath = null;
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('assets/attendances', 'public');
+        }
 
         //get today attendance
         $attendance = Attendance::where('user_id', $request->user()->id)
@@ -53,6 +68,7 @@ class AttendanceController extends Controller
         //save checkout
         $attendance->time_out = date('H:i:s');
         $attendance->latlon_out = $request->latitude . ',' . $request->longitude;
+        $attendance->photo_out = $photoPath;
         $attendance->save();
 
         return response([
