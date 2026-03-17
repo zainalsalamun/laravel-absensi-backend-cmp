@@ -115,7 +115,8 @@ docker-compose ps
 
 3. **Deploy Kode Aplikasi**
    ```bash
-   # Clone repository di direktori web
+   # Clone repository di direktori web standar /var/www
+   # Atau kamu bisa menggunakan direktori lain sesuai kebutuhan
    cd /var/www
    git clone https://github.com/zainalsalamun/laravel-absensi-backend-cmp.git absensi
    cd absensi
@@ -242,7 +243,8 @@ docker-compose ps
 
 3. **Deploy Kode Aplikasi**
    ```bash
-   # Clone repository di direktori web
+   # Clone repository di direktori web standar /var/www
+   # Atau kamu bisa menggunakan direktori lain sesuai kebutuhan
    cd /var/www
    git clone https://github.com/zainalsalamun/laravel-absensi-backend-cmp.git absensi
    cd absensi
