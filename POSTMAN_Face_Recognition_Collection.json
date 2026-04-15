@@ -1,0 +1,587 @@
+{
+	"info": {
+		"name": "Laravel Absensi - Face Recognition API",
+		"description": "Postman collection untuk testing Face Recognition Attendance System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Login - Test User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"    pm.collectionVariables.set('userId', jsonData.user.id);",
+									"    console.log('Token saved:', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "login"]
+						},
+						"description": "Login dengan test user. Token akan otomatis disimpan di variable collection."
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"    console.log('Admin token saved');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"zainalrtf@gmail.com\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "login"]
+						},
+						"description": "Login dengan admin user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Authenticated User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user",
+							"host": ["{{base_url}}"],
+							"path": ["api", "user"]
+						},
+						"description": "Get user info dengan token"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/logout",
+							"host": ["{{base_url}}"],
+							"path": ["api", "logout"]
+						},
+						"description": "Logout user"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints"
+		},
+		{
+			"name": "2. Face Recognition",
+			"item": [
+				{
+					"name": "Check Face Status (Before Enrollment)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/face-status",
+							"host": ["{{base_url}}"],
+							"path": ["api", "face-status"]
+						},
+						"description": "Cek status face enrollment. Seharusnya is_enrolled: false jika belum enroll."
+					},
+					"response": []
+				},
+				{
+					"name": "Enroll Face",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/path/to/your/face-photo.jpg",
+									"description": "Upload foto wajah yang jelas (jpeg, png, jpg, max 2MB)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/face-enrollment",
+							"host": ["{{base_url}}"],
+							"path": ["api", "face-enrollment"]
+						},
+						"description": "Enroll foto wajah untuk face recognition. Gunakan foto yang jelas dan terang."
+					},
+					"response": []
+				},
+				{
+					"name": "Check Face Status (After Enrollment)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/face-status",
+							"host": ["{{base_url}}"],
+							"path": ["api", "face-status"]
+						},
+						"description": "Cek status setelah enrollment. Seharusnya is_enrolled: true"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Face - Same Photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/path/to/your/face-photo.jpg",
+									"description": "Gunakan foto yang SAMA dengan saat enrollment untuk testing"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/face-verify",
+							"host": ["{{base_url}}"],
+							"path": ["api", "face-verify"]
+						},
+						"description": "Verify face dengan foto yang SAMA. Seharusnya is_match: true dengan similarity tinggi (>70%)"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Face - Different Photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/path/to/different-face-photo.jpg",
+									"description": "Gunakan foto wajah YANG BERBEDA untuk testing"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/face-verify",
+							"host": ["{{base_url}}"],
+							"path": ["api", "face-verify"]
+						},
+						"description": "Verify face dengan foto berbeda. Seharusnya is_match: false atau true dengan similarity lebih rendah"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Face Enrollment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/path/to/new-face-photo.jpg",
+									"description": "Foto wajah baru untuk replace enrollment lama"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/face-enrollment",
+							"host": ["{{base_url}}"],
+							"path": ["api", "face-enrollment"]
+						},
+						"description": "Update/re-enroll face dengan foto baru"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Face Enrollment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/face-enrollment",
+							"host": ["{{base_url}}"],
+							"path": ["api", "face-enrollment"]
+						},
+						"description": "Hapus face enrollment"
+					},
+					"response": []
+				}
+			],
+			"description": "Face recognition endpoints"
+		},
+		{
+			"name": "3. Attendance with Face",
+			"item": [
+				{
+					"name": "Check-in with Face",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "latitude",
+									"value": "-7.747033",
+									"type": "text"
+								},
+								{
+									"key": "longitude",
+									"value": "110.355398",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/path/to/your/face-photo.jpg",
+									"description": "Foto wajah untuk attendance (harus match dengan enrolled face)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/checkin",
+							"host": ["{{base_url}}"],
+							"path": ["api", "checkin"]
+						},
+						"description": "Check-in dengan face verification. Company attendance_type harus 'face'"
+					},
+					"response": []
+				},
+				{
+					"name": "Check if Checked-in",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/is-checkin",
+							"host": ["{{base_url}}"],
+							"path": ["api", "is-checkin"]
+						},
+						"description": "Cek apakah sudah check-in hari ini"
+					},
+					"response": []
+				},
+				{
+					"name": "Check-out with Face",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "latitude",
+									"value": "-7.747033",
+									"type": "text"
+								},
+								{
+									"key": "longitude",
+									"value": "110.355398",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/path/to/your/face-photo.jpg",
+									"description": "Foto wajah untuk checkout"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/checkout",
+							"host": ["{{base_url}}"],
+							"path": ["api", "checkout"]
+						},
+						"description": "Check-out dengan face verification"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Attendances",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/api-attendances?date={{today}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "api-attendances"],
+							"query": [
+								{
+									"key": "date",
+									"value": "{{today}}"
+								}
+							]
+						},
+						"description": "Get attendance history"
+					},
+					"response": []
+				}
+			],
+			"description": "Attendance endpoints with face verification"
+		},
+		{
+			"name": "4. Company Info",
+			"item": [
+				{
+					"name": "Get Company Info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/company",
+							"host": ["{{base_url}}"],
+							"path": ["api", "company"]
+						},
+						"description": "Get company info termasuk attendance_type"
+					},
+					"response": []
+				}
+			],
+			"description": "Company information"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Set today's date variable",
+					"pm.collectionVariables.set('today', new Date().toISOString().split('T')[0]);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "today",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
