@@ -192,7 +192,120 @@ ___
   ```
 ___
 
-## 4. Shifts
+## 4. Face Recognition
+
+### Enroll Face
+- **Endpoint**: `POST /face-enrollment`
+- **Description**: Enroll user's face for attendance recognition. This must be done before using face-based attendance.
+- **Headers**: `Authorization: Bearer {token}`
+- **Payload** (Form-Data):
+  - `photo` (file, required) - Clear face photo (jpeg, png, jpg, max 2MB)
+- **Response** (200 - Success):
+  ```json
+  {
+      "success": true,
+      "message": "Face enrolled successfully. You can now use face recognition for attendance.",
+      "data": {
+          "enrollment_id": 1,
+          "photo_url": "/storage/assets/faces/xyz.jpg"
+      }
+  }
+  ```
+- **Error Response** (400):
+  ```json
+  {
+      "success": false,
+      "message": "Failed to extract face features from image"
+  }
+  ```
+
+### Update Face Enrollment
+- **Endpoint**: `PUT /face-enrollment`
+- **Description**: Re-enroll or update user's face data.
+- **Headers**: `Authorization: Bearer {token}`
+- **Payload** (Form-Data):
+  - `photo` (file, required) - New face photo
+- **Response** (200): Same as enroll face
+
+### Remove Face Enrollment
+- **Endpoint**: `DELETE /face-enrollment`
+- **Description**: Remove user's face enrollment.
+- **Headers**: `Authorization: Bearer {token}`
+- **Response** (200):
+  ```json
+  {
+      "success": true,
+      "message": "Face enrollment removed successfully"
+  }
+  ```
+
+### Verify Face
+- **Endpoint**: `POST /face-verify`
+- **Description**: Verify if the provided photo matches the enrolled face. Used for testing face recognition.
+- **Headers**: `Authorization: Bearer {token}`
+- **Payload** (Form-Data):
+  - `photo` (file, required) - Face photo to verify
+- **Response** (200 - Match):
+  ```json
+  {
+      "success": true,
+      "message": "Face verified successfully",
+      "is_match": true,
+      "similarity": 78.5,
+      "threshold": 65,
+      "needs_enrollment": false
+  }
+  ```
+- **Response** (403 - No Match):
+  ```json
+  {
+      "success": true,
+      "message": "Face does not match",
+      "is_match": false,
+      "similarity": 45.2,
+      "threshold": 65,
+      "needs_enrollment": false
+  }
+  ```
+- **Error Response** (404 - Not Enrolled):
+  ```json
+  {
+      "success": false,
+      "message": "No face enrollment found. Please enroll your face first.",
+      "needs_enrollment": true
+  }
+  ```
+
+### Check Face Status
+- **Endpoint**: `GET /face-status`
+- **Description**: Check if user has enrolled their face.
+- **Headers**: `Authorization: Bearer {token}`
+- **Response** (200 - Enrolled):
+  ```json
+  {
+      "is_enrolled": true,
+      "message": "Face is enrolled",
+      "data": {
+          "enrollment_id": 1,
+          "photo_url": "/storage/assets/faces/xyz.jpg",
+          "created_at": "2026-04-14T10:00:00.000000Z",
+          "updated_at": "2026-04-14T10:00:00.000000Z"
+      }
+  }
+  ```
+- **Response** (200 - Not Enrolled):
+  ```json
+  {
+      "is_enrolled": false,
+      "message": "No face enrollment found. Please enroll your face.",
+      "data": null
+  }
+  ```
+
+**Note:** When company `attendance_type` is set to `'face'`, the `/checkin` and `/checkout` endpoints will automatically verify the user's face before recording attendance.
+___
+
+## 5. Shifts
 
 ### Get All Shifts
 - **Endpoint**: `GET /api-shifts`
@@ -237,7 +350,7 @@ ___
 
 ___
 
-## 5. Permissions (Leaves/Excuses)
+## 6. Permissions (Leaves/Excuses)
 
 ### Create Permission
 - **Endpoint**: `POST /api-permissions`
@@ -256,7 +369,7 @@ ___
 
 ___
 
-## 6. Reimbursements
+## 7. Reimbursements
 
 ### Get My Reimbursements
 - **Endpoint**: `GET /api-reimbursements`
@@ -289,7 +402,7 @@ ___
 
 ___
 
-## 7. Notes
+## 8. Notes
 
 ### Get My Notes
 - **Endpoint**: `GET /api-notes`
@@ -318,7 +431,7 @@ ___
 
 ___
 
-## 8. Company
+## 9. Company
 
 ### Get Company Information
 - **Endpoint**: `GET /company`
