@@ -28,6 +28,27 @@ Route::get('/is-checkin', [App\Http\Controllers\Api\AttendanceController::class,
 //update profile
 Route::post('/update-profile', [App\Http\Controllers\Api\AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
 
+// ==========================================
+// FACE RECOGNITION ENDPOINTS
+// ==========================================
+
+// Face enrollment - enroll/update face
+Route::post('/face-enrollment', [App\Http\Controllers\Api\FaceEnrollmentController::class, 'enroll'])->middleware('auth:sanctum');
+
+// Face enrollment - update (alias)
+Route::put('/face-enrollment', [App\Http\Controllers\Api\FaceEnrollmentController::class, 'update'])->middleware('auth:sanctum');
+
+// Face enrollment - remove
+Route::delete('/face-enrollment', [App\Http\Controllers\Api\FaceEnrollmentController::class, 'remove'])->middleware('auth:sanctum');
+
+// Face verification for attendance
+Route::post('/face-verify', [App\Http\Controllers\Api\FaceEnrollmentController::class, 'verify'])->middleware('auth:sanctum');
+
+// Check face enrollment status
+Route::get('/face-status', [App\Http\Controllers\Api\FaceEnrollmentController::class, 'status'])->middleware('auth:sanctum');
+
+// ==========================================
+
 //create permission
 Route::apiResource('/api-permissions', App\Http\Controllers\Api\PermissionController::class)->middleware('auth:sanctum');
 
