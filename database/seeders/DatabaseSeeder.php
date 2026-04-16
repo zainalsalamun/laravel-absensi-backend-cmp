@@ -28,7 +28,20 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // data dummy for company
+        // Create test user for face recognition testing
+        User::updateOrCreate(
+            ['email' => 'testuser@example.com'],
+            [
+                'name' => 'Test User Face',
+                'password' => Hash::make('password'),
+                'role' => 'user',
+                'position' => 'Staff',
+                'department' => 'IT Department',
+                'phone' => '081234567891',
+            ]
+        );
+
+        // Data dummy for company with FACE RECOGNITION enabled
         \App\Models\Company::create([
             'name' => 'PT. Sejahtera Selamanya',
             'email' => 'sejahtera@gmail.com',
@@ -38,6 +51,7 @@ class DatabaseSeeder extends Seeder
             'radius_km' => '0.5',
             'time_in' => '08:00',
             'time_out' => '17:00',
+            'attendance_type' => 'face', // Enable face recognition attendance
         ]);
 
         $this->call([
