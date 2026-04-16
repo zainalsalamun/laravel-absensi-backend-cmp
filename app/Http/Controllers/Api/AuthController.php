@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\FaceEnrollment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -55,7 +57,6 @@ class AuthController extends Controller
         $filePath = $image->storeAs('images/users', $image_name, 'public');
 
         $user->image_url = $filePath;
-        $user->face_embedding = null; // Clear old face embedding data since we're not using it anymore
         $user->save();
 
         return response([
