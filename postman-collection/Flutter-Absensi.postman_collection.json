@@ -1,0 +1,923 @@
+{
+  "info": {
+    "_postman_id": "d52f17fc-9a7c-40d8-b36f-b87fca224e76",
+    "name": "Flutter Absensi Backend API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection aligned with the current Laravel Absensi backend routes in routes/api.php."
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "user_id",
+      "value": "1"
+    },
+    {
+      "key": "attendance_date",
+      "value": "2026-04-23"
+    },
+    {
+      "key": "shift_id",
+      "value": "1"
+    },
+    {
+      "key": "overtime_id",
+      "value": "1"
+    },
+    {
+      "key": "photo_path",
+      "value": "/path/to/photo.jpg"
+    },
+    {
+      "key": "profile_image_path",
+      "value": "/path/to/profile.jpg"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ]
+            },
+            "description": "Authenticate user and copy the returned token into the collection variable `token`."
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Authenticated User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "{{profile_image_path}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/update-profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "update-profile"
+              ]
+            },
+            "description": "Current backend only accepts the `image` upload field."
+          },
+          "response": []
+        },
+        {
+          "name": "Update FCM Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fcm_token\": \"your-fcm-token\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/update-fcm-token",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "update-fcm-token"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Company",
+      "item": [
+        {
+          "name": "Get Company",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/company",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "company"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Attendance",
+      "item": [
+        {
+          "name": "Check In",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "latitude",
+                  "value": "-6.200000",
+                  "type": "text"
+                },
+                {
+                  "key": "longitude",
+                  "value": "106.816666",
+                  "type": "text"
+                },
+                {
+                  "key": "photo",
+                  "type": "file",
+                  "src": "{{photo_path}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/checkin",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "checkin"
+              ]
+            },
+            "description": "Photo is required by the current backend implementation."
+          },
+          "response": []
+        },
+        {
+          "name": "Check Out",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "latitude",
+                  "value": "-6.200000",
+                  "type": "text"
+                },
+                {
+                  "key": "longitude",
+                  "value": "106.816666",
+                  "type": "text"
+                },
+                {
+                  "key": "photo",
+                  "type": "file",
+                  "src": "{{photo_path}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/checkout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "checkout"
+              ]
+            },
+            "description": "Photo is required by the current backend implementation."
+          },
+          "response": []
+        },
+        {
+          "name": "Is Checkin",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/is-checkin",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "is-checkin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Attendances",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api-attendances?date={{attendance_date}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-attendances"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "{{attendance_date}}",
+                  "description": "Optional filter in YYYY-MM-DD format."
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Face Recognition",
+      "item": [
+        {
+          "name": "Enroll Face",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "photo",
+                  "type": "file",
+                  "src": "{{photo_path}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/face-enrollment",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "face-enrollment"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Face Enrollment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "photo",
+                  "type": "file",
+                  "src": "{{photo_path}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/face-enrollment",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "face-enrollment"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Face Enrollment",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/face-enrollment",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "face-enrollment"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Face",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "photo",
+                  "type": "file",
+                  "src": "{{photo_path}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/face-verify",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "face-verify"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Face Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/face-status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "face-status"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get User By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api-user/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-user",
+                "{{user_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "id",
+                  "value": "{{user_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "name",
+                  "value": "Updated User Name",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "updated.user@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "phone",
+                  "value": "081234567890",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "{{profile_image_path}}",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api-user/edit",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-user",
+                "edit"
+              ]
+            },
+            "description": "Validation checks `image_url`, but upload handling reads `image`, so the optional file field is kept as `image` to match the actual save logic."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Permissions",
+      "item": [
+        {
+          "name": "Create Permission",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "date",
+                  "value": "{{attendance_date}}",
+                  "type": "text"
+                },
+                {
+                  "key": "reason",
+                  "value": "Izin keperluan pribadi",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "{{photo_path}}",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api-permissions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-permissions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notes",
+      "item": [
+        {
+          "name": "Get Notes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api-notes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-notes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Note",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Meeting besok pagi\",\n  \"note\": \"Siapkan materi presentasi dan daftar hadir.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api-notes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-notes"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Shifts",
+      "item": [
+        {
+          "name": "Get Shifts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api-shifts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-shifts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Shift",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Shift Pagi\",\n  \"time_in\": \"08:00:00\",\n  \"time_out\": \"17:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api-shifts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-shifts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shift By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api-shifts/{{shift_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-shifts",
+                "{{shift_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Shift",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Shift Siang\",\n  \"time_in\": \"09:00:00\",\n  \"time_out\": \"18:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api-shifts/{{shift_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-shifts",
+                "{{shift_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Overtimes",
+      "item": [
+        {
+          "name": "Get Overtimes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api-overtimes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-overtimes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Overtime",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"{{attendance_date}}\",\n  \"duration\": 2,\n  \"description\": \"Menyelesaikan pekerjaan tambahan.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api-overtimes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-overtimes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Overtime By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api-overtimes/{{overtime_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-overtimes",
+                "{{overtime_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
